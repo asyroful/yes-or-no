@@ -1,9 +1,9 @@
 {
   "name": "yes-no-app",
+  "homepage": "https://asyroful.github.io/yes-or-no/",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://asyroful.github.io/yes-or-no/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
