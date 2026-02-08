@@ -4,11 +4,38 @@ import minionLoves from "./gif/minion-minion-loves.gif";
 import minionSuccess from "./gif/minions-cartoon.gif";
 import m from "./gif/m.gif";
 
+import Credential from "./components/Credential";
+import Confess from "./components/Confess";
+import Question from "./components/Question";
+
 function App() {
+  const [currentStep, setCurrentStep] = useState(0); // 0: Credential, 1: Confession, 2: Question
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
   const [answered, setAnswered] = useState(false);
   const [noClickCount, setNoClickCount] = useState(0);
 
-  // Array of annoying statements when "No" is clicked
+  const targetName = "Meyta Alfi Maharani";
+
+  const handleNameSubmit = (e) => {
+    e.preventDefault();
+    const inputName = name.trim().toLowerCase();
+    const fullName = targetName.toLowerCase();
+
+    if (inputName === fullName) {
+      setCurrentStep(1);
+      setError("");
+    } else if (inputName === "meyta" || inputName === "meyta alfi") {
+      setError("Isi nama lengkap ya, bisa jadi salah orang... 🧐");
+    } else {
+      setError("Ups, sepertinya kamu bukan orang yang dicari...");
+    }
+  };
+
+  const handleContinue = () => {
+    setCurrentStep(2);
+  };
+
   const annoyingStatements = [
     "No",
     "Are you sure? 🥺",
@@ -27,10 +54,9 @@ function App() {
     "Just give in and click Yes! 💕",
   ];
 
-  // Calculate Yes button size based on No clicks
   const getYesButtonSize = () => {
     const baseSize = 1;
-    const increment = 0.15; // Increase by 15% each click
+    const increment = 0.15;
     return baseSize + noClickCount * increment;
   };
 
@@ -39,52 +65,42 @@ function App() {
   };
 
   const handleNoClick = () => {
-    // Cycle through annoying statements
     if (noClickCount < annoyingStatements.length - 1) {
       setNoClickCount(noClickCount + 1);
     } else {
-      // Keep showing the last statement
       setNoClickCount(annoyingStatements.length - 1);
     }
   };
 
   return (
     <div className="app-container">
-      {!answered ? (
-        <>
-          <img src={minionLoves} alt="Minion Love" className="minion-gif" />
-          <h1 className="question-text">
-            Can I be yours? Or can you be mine? 💝
-          </h1>
-          <div className="buttons-container">
-            <button
-              className="btn btn-yes"
-              onClick={handleYesClick}
-              style={{
-                transform: `scale(${getYesButtonSize()})`,
-                transition: "transform 0.3s ease",
-              }}
-            >
-              Yes! 😊
-            </button>
-            <button className="btn btn-no" onClick={handleNoClick}>
-              {annoyingStatements[noClickCount]}
-            </button>
-          </div>
-        </>
-      ) : (
-        <div className="success-message">
-          <img
-            src={minionSuccess}
-            alt="Minion I Love You"
-            className="success-gif"
-          />
-          <img src={m} alt="Minion I Love You" className="success-gif" />
-          <h2 className="success-title">Yay! You're mine now!</h2>
-          <p className="success-subtitle">I'm so happy you said yes! 💖</p>
-        </div>
+      {currentStep === 0 && (
+        <Credential
+          name={name}
+          setName={setName}
+          error={error}
+          onSubmit={handleNameSubmit}
+        />
       )}
-      <footer className="footer">Copyright &copy; by Asyroful</footer>
+
+      {currentStep === 1 && (
+        <Confess name={name} onContinue={handleContinue} gif={minionLoves} />
+      )}
+
+      {currentStep === 2 && (
+        <Question
+          answered={answered}
+          handleYesClick={handleYesClick}
+          handleNoClick={handleNoClick}
+          getYesButtonSize={getYesButtonSize}
+          annoyingStatements={annoyingStatements}
+          noClickCount={noClickCount}
+          minionLoves={minionLoves}
+          minionSuccess={minionSuccess}
+          mGif={m}
+        />
+      )}
+      <footer className="footer">Copyright &copy; by M.A.M</footer>
     </div>
   );
 }
