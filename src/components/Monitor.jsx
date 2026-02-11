@@ -23,9 +23,8 @@ const Monitor = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      // Data dari Upstash adalah array of string JSON, perlu di-parse
-      const parsedLogs = data.logs.map(log => JSON.parse(log));
-      setLogs(parsedLogs);
+      // Upstash SDK sudah otomatis mem-parsing string JSON menjadi objek
+      setLogs(data.logs || []);
     } catch (e) {
       console.error("Error fetching logs:", e);
       setError("Gagal memuat data. Coba refresh halaman.");
