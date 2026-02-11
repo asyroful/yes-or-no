@@ -16,6 +16,7 @@ function App() {
   const [error, setError] = useState("");
   const [answered, setAnswered] = useState(false);
   const [noClickCount, setNoClickCount] = useState(0);
+  const [isResetting, setIsResetting] = useState(false);
 
   const targetName = "Meyta Alfi Maharani";
 
@@ -26,11 +27,14 @@ function App() {
 
     if (inputName === fullName) {
       // Reset counter dan log sesi sebelumnya
+      setIsResetting(true);
       try {
         await fetch("/api/reset", { method: "POST" });
       } catch (error) {
         console.error("Failed to reset session:", error);
         // Lanjutkan saja meskipun reset gagal
+      } finally {
+        setIsResetting(false);
       }
       
       setCurrentStep(1);
@@ -100,6 +104,7 @@ function App() {
           setName={setName}
           error={error}
           onSubmit={handleNameSubmit}
+          isLoading={isResetting}
         />
       )}
 
