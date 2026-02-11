@@ -1,32 +1,78 @@
 import { useState, useEffect } from "react";
 
-const Monitor = () => {
-  const [counts, setCounts] = useState({ yes_count: 0, no_count: 0 });
+// Helper untuk memformat tanggal
+const formatDate = (isoString) => {
+  const date = new Date(isoString);
+  return date.toLocaleString("id-ID", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+};
 
-  const fetchCounts = async () => {
+const Monitor = () => {
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchLogs = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      const response = await fetch("/api/counts");
+      const response = await fetch("/api/logs");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
-      setCounts(data);
-    } catch (error) {
-      console.error("Error fetching counts:", error);
+      // Data dari Upstash adalah array of string JSON, perlu di-parse
+      const parsedLogs = data.logs.map(log => JSON.parse(log));
+      setLogs(parsedLogs);
+    } catch (e) {
+      console.error("Error fetching logs:", e);
+      setError("Gagal memuat data. Coba refresh halaman.");
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchCounts();
+    fetchLogs();
   }, []);
 
   return (
-    <div className="monitor-container">
-      <h1>Click Monitor</h1>
-      <div className="counts">
-        <h2>Yes Clicks: {counts.yes_count}</h2>
-        <h2>No Clicks: {counts.no_count}</h2>
-      </div>
-      <button className="btn btn-yes" onClick={fetchCounts} style={{ marginTop: '20px', width: 'auto' }}>
-        Refresh
-      </button>
+    <div className="monitor-dashboard">
+      <header className="monitor-header">
+        <h1>Session Activity Monitor</h1>
+        <button className="btn-refresh" onClick={fetchLogs} disabled={loading}>
+          {loading ? "Loading..." : "Refresh"}
+        </button>
+      </header>
+      
+      <main className="monitor-content">
+        {error && <p className="error-message">{error}</p>}
+        {!loading && logs.length === 0 && !error && (
+          <p className="empty-state">Belum ada aktivitas yang tercatat.</p>
+        )}
+        <div className="log-list">
+          {logs.map((log, index) => (
+            <div key={index} className="log-card">
+              <div className="log-card-header">
+                <span>Sesi Login</span>
+                <span className="log-timestamp">{formatDate(log.timestamp)}</span>
+              </div>
+              <div className="log-card-body">
+                <div className="log-metric">
+                  <span className="metric-value">{log.yes_count}</span>
+                  <span className="metric-label">"Yes" Clicks</span>
+                </div>
+                <div className="log-metric">
+                  <span className="metric-value">{log.no_count}</span>
+                  <span className="metric-label">"No" Clicks</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </main>
     </div>
   );
 };

@@ -19,12 +19,20 @@ function App() {
 
   const targetName = "Meyta Alfi Maharani";
 
-  const handleNameSubmit = (e) => {
+  const handleNameSubmit = async (e) => {
     e.preventDefault();
     const inputName = name.trim().toLowerCase();
     const fullName = targetName.toLowerCase();
 
     if (inputName === fullName) {
+      // Reset counter dan log sesi sebelumnya
+      try {
+        await fetch("/api/reset", { method: "POST" });
+      } catch (error) {
+        console.error("Failed to reset session:", error);
+        // Lanjutkan saja meskipun reset gagal
+      }
+      
       setCurrentStep(1);
       setError("");
     } else if (inputName === "meyta" || inputName === "meyta alfi") {
