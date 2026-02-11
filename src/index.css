@@ -221,3 +221,20 @@ body {
     flex-direction: row; /* Switch back to row but only when it actually fits */
   }
 }
+
+.monitor-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #282c34;
+  color: white;
+  text-align: center;
+}
+
+.counts {
+  display: flex;
+  gap: 2rem;
+  font-size: 2rem;
+}
