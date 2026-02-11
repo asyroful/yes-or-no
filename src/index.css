@@ -198,21 +198,12 @@ body {
   color: #555;
 }
 
+
 .footer {
   margin-top: 30px;
   font-size: 0.75rem;
   color: #ffb3c1;
   font-weight: 500;
-}
-
-/* Animations */
-@keyframes popIn {
-  0% { transform: scale(0.9); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.step-container {
-  animation: popIn 0.4s ease-out;
 }
 
 /* Tablet and up: Adjust button container if needed, but keep mobile look */
@@ -221,6 +212,7 @@ body {
     flex-direction: row; /* Switch back to row but only when it actually fits */
   }
 }
+
 
 .monitor-container {
   display: flex;
