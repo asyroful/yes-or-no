@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import "./index.css";
 import minionLoves from "./gif/minion-minion-loves.gif";
 import minionSuccess from "./gif/minions-cartoon.gif";
+import bouquet from "./gif/bouquet.png"
 import m from "./gif/m.gif";
 
 import Credential from "./components/Credential";
@@ -109,7 +110,7 @@ function App() {
       )}
 
       {currentStep === 1 && (
-        <Confess name={name} onContinue={handleContinue} gif={minionLoves} />
+        <Confess name={name} onContinue={handleContinue} img={bouquet} />
       )}
 
       {currentStep === 2 && (
