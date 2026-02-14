@@ -43,7 +43,7 @@ function Question({
             className="success-gif"
           />
           <img src={mGif} alt="Minion I Love You" className="success-gif" />
-          <h2 className="success-title">Yay! You're mine now!</h2>
+          <h2 className="success-title">Yay! Love uuu😘</h2>
           <p className="success-subtitle">I'm so happy you said yes! 💖</p>
         </div>
       )}
